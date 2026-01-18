@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ author.username }} - Author Profile{% endblock %}
+
+{% block content %}
+<div class="author-profile-page">
+    <div class="author-header">
+        {% if author.profile_picture %}
+            <img src="{{ author.profile_picture.url }}" alt="{{ author.username }}" class="author-picture">
+        {% else %}
+            <div class="author-picture-placeholder">{{ author.username|first|upper }}</div>
+        {% endif %}
+        <div class="author-info">
+            <h1>{{ author.username }}</h1>
+            {% if author.first_name or author.last_name %}
+                <p class="full-name">{{ author.get_full_name }}</p>
+            {% endif %}
+            <p class="role-badge">{{ author.get_role_display }}</p>
+            {% if author.bio %}
+                <p class="bio">{{ author.bio }}</p>
+            {% endif %}
+            <p class="stats">{{ courses.count }} Course{{ courses.count|pluralize }}</p>
+        </div>
+    </div>
+
+    <div class="author-courses">
+        <h2>Courses by {{ author.username }}</h2>
+        <div class="course-grid">
+            {% for course in courses %}
+            <div class="course-card">
+                {% if course.thumbnail %}
+                    <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}">
+                {% else %}
+                    <div class="course-placeholder">No Image</div>
+                {% endif %}
+                <div class="course-info">
+                    <h3>{{ course.title }}</h3>
+                    <p class="difficulty">{{ course.get_difficulty_display }}</p>
+                    <p class="description">{{ course.description|truncatewords:20 }}</p>
+                    <a href="{% url 'course_detail' course.slug %}" class="btn btn-secondary">View Course</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>This author hasn't published any courses yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

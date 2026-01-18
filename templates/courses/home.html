@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to E-Learning Platform</h1>
+    <p>Learn from the best instructors around the world</p>
+    <a href="{% url 'course_list' %}" class="btn btn-primary">Browse Courses</a>
+</div>
+
+<section class="featured-courses">
+    <h2>Featured Courses</h2>
+    <div class="course-grid">
+        {% for course in courses|slice:":6" %}
+        <div class="course-card">
+            {% if course.thumbnail %}
+                <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}">
+            {% else %}
+                <div class="course-placeholder">No Image</div>
+            {% endif %}
+            <div class="course-info">
+                <h3>{{ course.title }}</h3>
+                <p class="author">By <a href="{% url 'author_profile' course.author.username %}">{{ course.author.username }}</a></p>
+                <p class="difficulty">{{ course.get_difficulty_display }}</p>
+                <p class="description">{{ course.description|truncatewords:20 }}</p>
+                <a href="{% url 'course_detail' course.slug %}" class="btn btn-secondary">View Course</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No courses available yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

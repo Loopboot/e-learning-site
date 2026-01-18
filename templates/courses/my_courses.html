@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}My Courses - E-Learning Platform{% endblock %}
+
+{% block content %}
+<div class="my-courses">
+    <h1>My Enrolled Courses</h1>
+
+    <div class="course-grid">
+        {% for enrollment in enrollments %}
+        <div class="course-card">
+            {% if enrollment.course.thumbnail %}
+                <img src="{{ enrollment.course.thumbnail.url }}" alt="{{ enrollment.course.title }}">
+            {% else %}
+                <div class="course-placeholder">No Image</div>
+            {% endif %}
+            <div class="course-info">
+                <h3>{{ enrollment.course.title }}</h3>
+                <p class="author">By {{ enrollment.course.author.username }}</p>
+                <p class="enrolled-date">Enrolled: {{ enrollment.enrolled_at|date:"M d, Y" }}</p>
+                <a href="{% url 'course_detail' enrollment.course.slug %}" class="btn btn-primary">Continue Learning</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>You haven't enrolled in any courses yet. <a href="{% url 'course_list' %}">Browse courses</a></p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

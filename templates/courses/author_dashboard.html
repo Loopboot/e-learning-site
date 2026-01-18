@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Author Dashboard - E-Learning Platform{% endblock %}
+
+{% block content %}
+<div class="author-dashboard">
+    <div class="dashboard-header">
+        <h1>Author Dashboard</h1>
+        <a href="{% url 'create_course' %}" class="btn btn-primary">Create New Course</a>
+    </div>
+
+    <h2>My Courses</h2>
+    <div class="courses-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Students</th>
+                    <th>Lessons</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{ course.title }}</td>
+                    <td>
+                        {% if course.is_published %}
+                            <span class="status-published">Published</span>
+                        {% else %}
+                            <span class="status-draft">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ course.enrollments.count }}</td>
+                    <td>{{ course.lessons.count }}</td>
+                    <td>{{ course.created_at|date:"M d, Y" }}</td>
+                    <td class="actions">
+                        <a href="{% url 'course_detail' course.slug %}" class="btn-small">View</a>
+                        <a href="{% url 'edit_course' course.slug %}" class="btn-small">Edit</a>
+                        <a href="{% url 'manage_lessons' course.slug %}" class="btn-small">Lessons</a>
+                        <a href="{% url 'delete_course' course.slug %}" class="btn-small btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">You haven't created any courses yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

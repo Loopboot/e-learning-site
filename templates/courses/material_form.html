@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Material - {{ lesson.title }}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <h1>Upload Material for {{ lesson.title }}</h1>
+
+    <form method="post" enctype="multipart/form-data" class="material-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Material Title:</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <span class="error">{{ form.title.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.material_type.id_for_label }}">Type:</label>
+            {{ form.material_type }}
+            {% if form.material_type.errors %}
+                <span class="error">{{ form.material_type.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.file.id_for_label }}">File:</label>
+            {{ form.file }}
+            {% if form.file.errors %}
+                <span class="error">{{ form.file.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description:</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <span class="error">{{ form.description.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Upload Material</button>
+            <a href="{% url 'manage_materials' course.slug lesson.id %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ lesson.title }} - {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="lesson-detail">
+    <nav class="breadcrumb">
+        <a href="{% url 'course_list' %}">Courses</a> /
+        <a href="{% url 'course_detail' course.slug %}">{{ course.title }}</a> /
+        <span>{{ lesson.title }}</span>
+    </nav>
+
+    <h1>{{ lesson.title }}</h1>
+
+    <div class="lesson-content">
+        {{ lesson.content|linebreaks }}
+    </div>
+
+    {% if materials %}
+    <div class="materials-section">
+        <h2>Learning Materials</h2>
+        <div class="materials-list">
+            {% for material in materials %}
+            <div class="material-item">
+                <span class="material-type">{{ material.get_material_type_display }}</span>
+                <h3>{{ material.title }}</h3>
+                <p>{{ material.description }}</p>
+                <div class="material-actions">
+                    <a href="{% url 'download_material' material.id %}" class="btn btn-primary">Download</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="lesson-navigation">
+        <a href="{% url 'course_detail' course.slug %}" class="btn btn-secondary">Back to Course</a>
+    </div>
+</div>
+{% endblock %}

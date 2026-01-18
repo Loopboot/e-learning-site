@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }} - E-Learning Platform{% endblock %}
+
+{% block content %}
+<div class="course-detail">
+    <div class="course-header">
+        {% if course.thumbnail %}
+            <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}" class="course-thumbnail-large">
+        {% endif %}
+        <div class="course-header-info">
+            <h1>{{ course.title }}</h1>
+            <p class="author">By <a href="{% url 'author_profile' course.author.username %}">{{ course.author.username }}</a></p>
+            <p class="difficulty">Difficulty: {{ course.get_difficulty_display }}</p>
+            <p class="meta">{{ course.lessons.count }} Lessons | {{ course.enrollments.count }} Students Enrolled</p>
+            
+            {% if user.is_authenticated %}
+                {% if user == course.author %}
+                    <a href="{% url 'edit_course' course.slug %}" class="btn btn-primary">Edit Course</a>
+                    <a href="{% url 'manage_lessons' course.slug %}" class="btn btn-secondary">Manage Lessons</a>
+                {% elif is_enrolled %}
+                    <p class="enrolled-badge">✓ Enrolled</p>
+                {% else %}
+                    <form method="post" action="{% url 'enroll_course' course.slug %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Enroll Now</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">Login to Enroll</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="course-content">
+        <h2>About This Course</h2>
+        <p>{{ course.description }}</p>
+
+        <h2>Course Content</h2>
+        <div class="lessons-list">
+            {% for lesson in lessons %}
+            <div class="lesson-item">
+                <h3>{{ forloop.counter }}. {{ lesson.title }}</h3>
+                {% if user.is_authenticated and is_enrolled or user == course.author %}
+                    <a href="{% url 'lesson_detail' course.slug lesson.id %}" class="btn btn-secondary">View Lesson</a>
+                {% else %}
+                    <span class="locked">🔒 Enroll to access</span>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p>No lessons available yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
