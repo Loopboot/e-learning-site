@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "0.0.0.0",
-    "e-learning-site-gjfk.onrender.comg",
+    "https://e-learning-site-gjfk.onrender.com",
 ]
 
 
